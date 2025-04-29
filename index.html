@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depot Air Minum Mulya RO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #FF9800;
+            --dark: #333;
+            --light: #f9f9f9;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 1rem;
+        }
+        
+        .product-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .product-stock {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .add-to-cart {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #3d8b40;
+        }
+        
+        .cart-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--secondary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 90;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .cart-modal.active {
+            right: 0;
+        }
+        
+        .cart-header {
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .cart-items {
+            padding: 1rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+        
+        .cart-item-price {
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #ddd;
+            background: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .remove-item {
+            color: red;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        
+        .cart-total {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        .checkout-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .checkout-btn:hover {
+            background-color: #e68a00;
+        }
+        
+        .checkout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .checkout-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .checkout-form {
+            background-color: white;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .confirm-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .products {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .cart-modal {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-store"></i>
+            <span>Menu Order </span>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h2>Produk Kami</h2>
+        <div class="products">
+            <!-- Produk 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/Galon_1.jpeg?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Air">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Isi Ulang Mulya RO 19ltr</h3>
+                    <p class="product-price">Rp 5,000</p>
+                    <p class="product-stock">Stok: 100</p>
+                    <button class="add-to-cart" data-id="1" data-name="Isi Ulang Mulya RO 19ltr" data-price="5000" data-image="image/Galon_1.jpeg?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80">Tambah ke Keranjang</button>
+                </div>
+            </div>
+            
+            <!-- Produk 2 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/galon_Kran.png?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Air">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Isi Ulang Galon Kran 19ltr</h3>
+                    <p class="product-price">Rp 5,000</p>
+                    <p class="product-stock">Stok: 100</p>
+                    <button class="add-to-cart" data-id="2" data-name="Isi Ulang Galon kran 19ltr" data-price="5000" data-image="image/galon_Kran.png?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80">Tambah ke Keranjang</button>
+                </div>
+            </div>
+            
+            <!-- Produk 3 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/Galon_kran_kosong.png?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Galon">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Galon Kran Kosong 19ltr</h3>
+                    <p class="product-price">Rp 35,000</p>
+                    <p class="product-stock">Stok: 25</p>
+                    <button class="add-to-cart" data-id="3" data-name="Galon Kran Kosong 19ltr" data-price="35000" data-image="image/Galon_kran_kosong.png?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80">Tambah ke Keranjang</button>
+                </div>
+            </div>
+            
+            <!-- Produk 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Telur">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Telur Ayam 1kg</h3>
+                    <p class="product-price">Rp 25,000</p>
+                    <p class="product-stock">Stok: 60</p>
+                    <button class="add-to-cart" data-id="4" data-name="Telur Ayam 1kg" data-price="25000" data-image="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80">Tambah ke Keranjang</button>
+                </div>
+            </div>
+            
+            <!-- Produk 5 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Mie Instan">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Mie Instan 1 Dus</h3>
+                    <p class="product-price">Rp 40,000</p>
+                    <p class="product-stock">Stok: 40</p>
+                    <button class="add-to-cart" data-id="5" data-name="Mie Instan 1 Dus" data-price="40000" data-image="https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80">Tambah ke Keranjang</button>
+                </div>
+            </div>
+            
+            <!-- Produk 6 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Sabun Mandi">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Sabun Mandi 1 Lusin</h3>
+                    <p class="product-price">Rp 35,000</p>
+                    <p class="product-stock">Stok: 30</p>
+                    <button class="add-to-cart" data-id="6" data-name="Sabun Mandi 1 Lusin" data-price="35000" data-image="https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80">Tambah ke Keranjang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tombol Keranjang -->
+    <div class="cart-btn">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+    </div>
+    
+    <!-- Modal Keranjang -->
+    <div class="cart-modal">
+        <div class="cart-header">
+            <h3>Keranjang Belanja</h3>
+            <button class="close-cart">&times;</button>
+        </div>
+        <div class="cart-items">
+            <!-- Item keranjang akan ditambahkan di sini melalui JavaScript -->
+        </div>
+        <div class="cart-total">
+            Total: Rp <span class="total-price">0</span>
+        </div>
+        <button class="checkout-btn">Checkout via WhatsApp</button>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Modal Checkout -->
+    <div class="checkout-modal">
+        <div class="checkout-form">
+            <h3>Formulir Pemesanan</h3>
+            <div class="form-group">
+                <label for="name">Nama Lengkap</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Nomor WhatsApp</label>
+                <input type="tel" id="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Alamat Lengkap</label>
+                <textarea id="address" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="payment">Metode Pembayaran</label>
+                <select id="payment" required>
+                    <option value="">Pilih metode pembayaran</option>
+                    <option value="COD">COD (Bayar di Tempat)</option>
+                    <option value="DANA">DANA</option>
+                    <option value="GOPAY">GOPAY</option>
+                    <option value="Transfer Bank">Transfer Bank</option>
+                </select>
+            </div>
+            <div class="form-buttons">
+                <button class="cancel-btn">Batal</button>
+                <button class="confirm-btn">Konfirmasi Pesanan</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data Produk
+        const products = [
+            {
+                id: 1,
+                name: "Isi Ulang Mulya RO 19ltr",
+                price: 5000,
+                image: "image/Galon_1.jpeg?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                stock: 100
+            },
+            {
+                id: 2,
+                name: "Isi Ulang Galon Kran 19ltr",
+                price: 5000,
+                image: "image/galon_Kran.png?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                stock: 100
+            },
+            {
+                id: 3,
+                name: "Galon Kran Kosong 19ltr",
+                price: 35000,
+                image: "image/Galon_kran_kosong.png?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                stock: 25
+            },
+            {
+                id: 4,
+                name: "Telur Ayam 1kg",
+                price: 25000,
+                image: "https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                stock: 60
+            },
+            {
+                id: 5,
+                name: "Mie Instan 1 Dus",
+                price: 40000,
+                image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                stock: 40
+            },
+            {
+                id: 6,
+                name: "Sabun Mandi 1 Lusin",
+                price: 35000,
+                image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                stock: 30
+            }
+        ];
+        
+        // Variabel Global
+        let cart = [];
+        let orderNumber = 1;
+        
+        // DOM Elements
+        const cartBtn = document.querySelector('.cart-btn');
+        const cartModal = document.querySelector('.cart-modal');
+        const closeCartBtn = document.querySelector('.close-cart');
+        const cartItemsContainer = document.querySelector('.cart-items');
+        const totalPriceElement = document.querySelector('.total-price');
+        const cartCountElement = document.querySelector('.cart-count');
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        const checkoutModal = document.querySelector('.checkout-modal');
+        const cancelBtn = document.querySelector('.cancel-btn');
+        const confirmBtn = document.querySelector('.confirm-btn');
+        const overlay = document.querySelector('.overlay');
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        
+        // Event Listeners
+        cartBtn.addEventListener('click', openCart);
+        closeCartBtn.addEventListener('click', closeCart);
+        checkoutBtn.addEventListener('click', openCheckoutModal);
+        cancelBtn.addEventListener('click', closeCheckoutModal);
+        confirmBtn.addEventListener('click', confirmOrder);
+        overlay.addEventListener('click', () => {
+            closeCart();
+            closeCheckoutModal();
+        });
+        
+        // Tambahkan event listener untuk semua tombol "Tambah ke Keranjang"
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', addToCart);
+        });
+        
+        // Fungsi untuk membuka keranjang
+        function openCart() {
+            cartModal.classList.add('active');
+            overlay.classList.add('active');
+        }
+        
+        // Fungsi untuk menutup keranjang
+        function closeCart() {
+            cartModal.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+        
+        // Fungsi untuk membuka modal checkout
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                alert('Keranjang belanja Anda kosong!');
+                return;
+            }
+            checkoutModal.classList.add('active');
+        }
+        
+        // Fungsi untuk menutup modal checkout
+        function closeCheckoutModal() {
+            checkoutModal.classList.remove('active');
+        }
+        
+        // Fungsi untuk menambahkan produk ke keranjang
+        function addToCart(e) {
+            const button = e.target;
+            const id = parseInt(button.getAttribute('data-id'));
+            const name = button.getAttribute('data-name');
+            const price = parseInt(button.getAttribute('data-price'));
+            const image = button.getAttribute('data-image');
+            
+            // Cek apakah produk sudah ada di keranjang
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                // Jika sudah ada, tambahkan jumlahnya
+                existingItem.quantity += 1;
+            } else {
+                // Jika belum ada, tambahkan produk baru
+                cart.push({
+                    id,
+                    name,
+                    price,
+                    image,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            openCart();
+        }
+        
+        // Fungsi untuk memperbarui tampilan keranjang
+        function updateCart() {
+            // Kosongkan container keranjang
+            cartItemsContainer.innerHTML = '';
+            
+            let total = 0;
+            
+            // Tambahkan setiap item ke keranjang
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                
+                itemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-title">${item.name}</h4>
+                        <p class="cart-item-price">Rp ${item.price.toLocaleString()}</p>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                        </div>
+                        <button class="remove-item" data-id="${item.id}">Hapus</button>
+                    </div>
+                `;
+                
+                cartItemsContainer.appendChild(itemElement);
+                total += item.price * item.quantity;
+                
+                // Tambahkan event listener untuk tombol plus/minus
+                const minusBtn = itemElement.querySelector('.minus');
+                const plusBtn = itemElement.querySelector('.plus');
+                const removeBtn = itemElement.querySelector('.remove-item');
+                
+                minusBtn.addEventListener('click', () => {
+                    const itemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
+                    if (cart[itemIndex].quantity > 1) {
+                        cart[itemIndex].quantity -= 1;
+                        updateCart();
+                    }
+                });
+                
+                plusBtn.addEventListener('click', () => {
+                    const itemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
+                    cart[itemIndex].quantity += 1;
+                    updateCart();
+                });
+                
+                removeBtn.addEventListener('click', () => {
+                    cart = cart.filter(cartItem => cartItem.id !== item.id);
+                    updateCart();
+                });
+            });
+            
+            // Update total harga
+            totalPriceElement.textContent = total.toLocaleString();
+            
+            // Update jumlah item di keranjang
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountElement.textContent = totalItems;
+        }
+        
+        // Fungsi untuk mengkonfirmasi pesanan
+        function confirmOrder() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const payment = document.getElementById('payment').value;
+            
+            // Validasi form
+            if (!name || !phone || !address || !payment) {
+                alert('Harap lengkapi semua field!');
+                return;
+            }
+            
+            // Format pesan WhatsApp
+            const now = new Date();
+            const dateTime = now.toLocaleString('id-ID');
+            
+            let message = `Halo, saya ingin memesan:\n\n`;
+            message += `No.Order: *#${orderNumber.toString().padStart(3, '0')}*\n`;
+            message += `Tanggal: ${dateTime}\n\n`;
+            message += `*Data Pelanggan:*\n`;
+            message += `Nama: ${name}\n`;
+            message += `No. HP: ${phone}\n`;
+            message += `Alamat: ${address}\n`;
+            message += `Metode Pembayaran: ${payment}\n\n`;
+            message += `*Daftar Pesanan:*\n`;
+            
+            cart.forEach(item => {
+                message += `${item.name}-${item.quantity}xRp ${item.price.toLocaleString()} = Rp ${(item.quantity * item.price).toLocaleString()}\n`;
+            });
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            message += `\n*Total Pembayaran:Rp ${total.toLocaleString()}*\n\n`;
+            message += `Link: https://toko-sembako-sejahtera.com\n\n`;
+            message += `Terima kasih!`;
+            
+            // Encode pesan untuk URL WhatsApp
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=6285295707007&text=${encodedMessage}`;
+
+            // Reset form dan keranjang
+            document.getElementById('name').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('payment').value = '';
+            
+            cart = [];
+            updateCart();
+            orderNumber++;
+            closeCheckoutModal();
+            closeCart();
+            
+            // Buka WhatsApp
+            window.open(whatsappUrl, '_blank');
+            
+            alert('Pesanan Anda telah dikirim via WhatsApp!');
+        }
+    </script>
+</body>
+</html>
